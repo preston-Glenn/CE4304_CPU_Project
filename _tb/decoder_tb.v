@@ -1,24 +1,24 @@
 module decoder_tb;
-
 	// Inputs
-	reg [3:0]  reg_dest;
-	reg [3:0]  reg_source_1;
-	reg [3:0]  reg_source_2;
-	reg [15:0] immediate;
-	reg [4:0]  opcode;
-    reg [INSTRUCTION_WIDTH-1:0] instruction;
+	wire [3:0]  reg_dest;
+	wire [3:0]  reg_source_1;
+	wire [3:0]  reg_source_2;
+	wire [15:0] immediate;
+	wire [4:0]  opcode;
+   reg [33-1:0] instruction;
+	reg clk;
 
-	// Outputs
-	wire [15:0] read_data;
+
+
 
 	// Instantiate the Unit Under Test (UUT)
 	decode_instruction uut (
-		instruction,
-        reg_dest,     
-        reg_source_1,  
-        reg_source_2,  
-        immediate,
-        opcode,
+		  .instruction(instruction),
+        .reg_dest(reg_dest),     
+        .reg_source_1(reg_source_1),  
+        .reg_source_2(reg_source_2),  
+        .immediate(immediate),
+        .opcode(opcode)
 	);
    integer c ;
 	initial begin
@@ -44,7 +44,7 @@ module decoder_tb;
         clk <= clk + 1;
 		#100;
 
-        instruction <= 33'h030100030;
+        instruction <= 33'h030200030;
         clk <= clk + 1;
 		#100;
 
@@ -70,7 +70,7 @@ module decoder_tb;
         clk <= clk + 1;
 		#100;
 
-        instruction <= 33'h0E130FFFD
+        instruction <= 33'h0E130FFFD;
         clk <= clk + 1;
 		#100;
 

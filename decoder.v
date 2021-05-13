@@ -7,7 +7,7 @@ module decode_instruction(
   reg_source_1,  
   reg_source_2,  
   immediate,
-  opcode,
+  opcode
   ) ;
   `include "params.v"
 
