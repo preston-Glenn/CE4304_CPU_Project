@@ -17,11 +17,13 @@ input clk;
 
 //parameter NUM_INSTR_WORDS = NUM_ADDRESS; // Bytes for  instr_width / bytes for address_width
 parameter NUM_INSTR_WORDS = 64 ;
-reg [INSTRUCTION_WIDTH-1:0] memory [NUM_INSTR_WORDS-1:0]
+reg [INSTRUCTION_WIDTH-1:0] memory [NUM_INSTR_WORDS-1:0];
+reg [INSTRUCTION_WIDTH-1:0] current_value;
 
 
 // Place instructions here
 initial begin
+memory[0] = 33'b1010;
   // Program 1:
   // 0x011000010
   // 0x012000020

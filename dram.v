@@ -15,7 +15,6 @@ module dram(
   input [ADDRESS_BUS_WIDTH-1:0] address ;
   input [DATA_BUS_WIDTH-1:0] write_data ;
   output [DATA_BUS_WIDTH-1:0] read_data ;
-  inout [DATA_BUS_WIDTH-1:0] data ;
   input read_not_write ;
   input clk ;
   input cs;
@@ -32,12 +31,12 @@ module dram(
   end
 
 
-  alway @ (posedge clk) begin
+  always @ (posedge clk) begin
     if(cs) begin 
       if (read_not_write) begin
         current_value <= data_memory[address];
       end else begin
-        data_memory[address] <= data;
+        data_memory[address] <= write_data;
       end
     end  else 
       current_value <= 24'bz;

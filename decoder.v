@@ -8,7 +8,7 @@ module decode_instruction(
   reg_source_2,  
   immediate,
   opcode,
-  decoded) ;
+  ) ;
   `include "params.v"
 
   input [INSTRUCTION_WIDTH-1:0] instruction ;

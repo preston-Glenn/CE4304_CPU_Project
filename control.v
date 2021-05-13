@@ -10,8 +10,8 @@ clk,
 
 
 
-)
-
+);
+input clk;
 
 
 
