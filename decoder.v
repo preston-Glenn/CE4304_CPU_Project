@@ -17,7 +17,6 @@ module decode_instruction(
   output [REGFILE_ADDR_BITS-1:0] reg_dest ;
   output [IMMEDIATE_WIDTH-1:0] immediate ;
   output [WIDTH_OPCODE-1:0] opcode ;
-  output [NUM_INSTRUCTIONS-1:0] decoded ;
 
   parameter OPCODE_LSB = INSTRUCTION_WIDTH - WIDTH_OPCODE ;
   assign opcode = instruction[INSTRUCTION_WIDTH-1:OPCODE_LSB];
