@@ -38,7 +38,7 @@ module data_ram_tb;
         clk <= clk + 1;
         address <= 12'd16 ;
         read_not_write <=0;
-        write_data <= 23'd10;
+        write_data <= 23'd63;
 		#100;
 
         clk <= clk + 1;
@@ -46,7 +46,7 @@ module data_ram_tb;
 
         cs <= 1;
         clk <= clk + 1;
-        address <= 12'd16 ;
+        address <= 12'd24 ;
         read_not_write <=0;
         write_data <= 23'd10;
 		#100;
