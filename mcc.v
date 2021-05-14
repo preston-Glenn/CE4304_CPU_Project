@@ -39,7 +39,8 @@ module Multi_Cycle_Computer(
     wire [1:0] alu_B_src;
     wire [DATA_BUS_WIDTH-1:0] alu_a_input;
     wire [DATA_BUS_WIDTH-1:0] alu_b_input;
-	 wire [DATA_BUS_WIDTH-1:0] sign_extended ;
+	wire [DATA_BUS_WIDTH-1:0] sign_extended ;
+    wire [DATA_BUS_WIDTH-1:0] loaded_memory;
 
       // data address wires
     wire [ADDRESS_BUS_WIDTH-1:0] reset_address ;
@@ -77,9 +78,10 @@ module Multi_Cycle_Computer(
 
     // need mux for regfile data
 
+    //WORK
     mux2 #(DATA_BUS_WIDTH) regfile_mux(
-        .data0(),
-        .data1(),
+        .data0(alu_reg_out),
+        .data1(loaded_memory),
         .select(mem_not_alu),
         .data_output(regfile_data)
     );
@@ -137,37 +139,40 @@ module Multi_Cycle_Computer(
     );
 
 
-	  sign_extender se ( .src(immediate), .out1(sign_extended) ) ;
+	sign_extender se ( .src(immediate), .out1(sign_extended) ) ;
 
 
     // MUX's for ALU INPUT
 
+    // WORK
     mux2 #(DATA_BUS_WIDTH) alu_A_mux(
         .data0({13'b0,pc_addr}),
-        .data1(reg_src_1),
+        .data1(alu_a_input_reg),
         .select(alu_A_src),
         .data_output(alu_a_input)
     );
 
+    //WORK
     mux4  #(DATA_BUS_WIDTH) alu_B_mux(
-        .data0(reg_src_2),
+        .data0(reg_src_2_data),
         .data1(24'b1),
         .data2(sign_extended),
         .data3(24'd1023), //error
         .select(alu_B_src),
         .data_output(alu_b_input)
     );
-
+    // WORK
 	data_register regA( 
     .clk(clock), 
-    .in_data(alu_a_input), 
+    .in_data(reg_src_1_data), 
     .out_data(alu_a_input_reg),
     .en(VDD)
   ) ;
   
+    // WORK
   data_register regB( 
     .clk(clock), 
-    .in_data(alu_b_input), 
+    .in_data(reg_src_2_data), 
     .out_data(alu_b_input_reg),
     .en(VDD)
   ) ;
@@ -175,8 +180,8 @@ module Multi_Cycle_Computer(
 
 
     alu ALU(
-        .A(alu_a_input_reg),
-        .B(alu_b_input_reg),
+        .A(alu_a_input),
+        .B(alu_b_input),
         .result(alu_out),
         .Alu_Op(alu_ctrl),
         .Z(zero)
