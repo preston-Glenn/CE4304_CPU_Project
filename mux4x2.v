@@ -29,7 +29,7 @@ reg [WIDTH-1:0] data_bus ;
       3: data_bus <= data3 ;
     endcase
   end
-  assign data_out = data_bus ;
+  assign data_output = data_bus ;
 
 endmodule
 

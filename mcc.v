@@ -32,6 +32,7 @@ module Multi_Cycle_Computer(
     wire [WIDTH_OPCODE-1:0] opcode;
     wire [1:0] pc_source;
 	 wire [DATA_BUS_WIDTH-1:0] alu_reg_out;
+	 wire [DATA_BUS_WIDTH-1:0] alu_out;
 
     wire [INSTRUCTION_WIDTH-1:0] iram_out;
     wire [DATA_BUS_WIDTH-1:0] dram_data;
@@ -39,13 +40,13 @@ module Multi_Cycle_Computer(
     wire [1:0] alu_B_src;
     wire [DATA_BUS_WIDTH-1:0] alu_a_input;
     wire [DATA_BUS_WIDTH-1:0] alu_b_input;
-	wire [DATA_BUS_WIDTH-1:0] sign_extended ;
+	 wire [DATA_BUS_WIDTH-1:0] sign_extended ;
     wire [DATA_BUS_WIDTH-1:0] loaded_memory;
 
       // data address wires
     wire [ADDRESS_BUS_WIDTH-1:0] reset_address ;
     wire [ADDRESS_BUS_WIDTH-1:0] jump_address ;
-	 
+	 wire [2:0] alu_ctrl;
 
     wire clock_delayed;
 
@@ -131,7 +132,7 @@ module Multi_Cycle_Computer(
 
     mux4 pc_mux(
         .data0(alu_out),
-        .data1(alu_out_buf),
+        .data1(alu_reg_out),
         .data2(jump_address),
         .data3(reset_address),
         .select(pc_source),
@@ -206,7 +207,7 @@ module Multi_Cycle_Computer(
     control controller(
         .clk(clock),                // CLOCK
         .reset(reset),              // RESET
-        .opcode(opcode),            // OPCODE from decode
+        .instruction(instruction),            // OPCODE from decode
         .zero(zero),                // tells when alu output = 0
 
         .IR_Write(enable_instr_reg),    // enables writing to instruction register (where we store instruction)
@@ -215,7 +216,7 @@ module Multi_Cycle_Computer(
         .Mem_Select(mem_select),
         .PC_Source(pc_source),          // choose what is written to pc
         .pc_write_enable(pc_enabled),    // enable writing to pc
-        .alu_src_a(alu_B_src),          // alu_src_a select
+        .alu_src_a(alu_A_src),          // alu_src_a select
         .alu_src_b(alu_B_src),          // alu_src_b select
         .ALUop(alu_ctrl),     
         .RegWrite(regfile_write_enable)    

@@ -8,7 +8,7 @@
 module control(
 clk,                // CLOCK
 reset,              // RESET
-opcode,             // OPCODE from decode
+instruction,          
 zero,               // tells when alu output = 0
 
 IR_Write,    // enables writing to instruction register (where we store instruction)
@@ -27,8 +27,8 @@ RegWrite,
 
 `include "params.v"
 input clk;
-input reset ;              
-input [WIDTH_OPCODE-1:0] opcode ; 
+input reset ;               
+input [INSTRUCTION_WIDTH-1:0] instruction ;
 input zero;
 
 output reg IR_Write ;     
@@ -38,7 +38,7 @@ output reg alu_src_a ;
 output reg [1:0] alu_src_b ;  
 output reg [1:0] PC_Source ;           
 output reg pc_write_enable ;    
-output reg ALUop;  
+output reg [2:0]ALUop;  
 output reg RegWrite;
 output reg Mem_Select;    
 
@@ -75,6 +75,9 @@ parameter ALU_SRC_B_IMM_BYTES = 2'd2 ;
 parameter DATA_SELECT_ALU_OUT = 1'b0 ;
 parameter DATA_SELECT_MEMORY = 1'b1 ;
 
+parameter OPCODE_LSB = INSTRUCTION_WIDTH - WIDTH_OPCODE ;
+
+
 // PC select mux value
 parameter PC_SELECT_ALU = 2'b0 ;
 parameter PC_SELECT_ALU_BUF = 2'b1 ;
@@ -84,6 +87,9 @@ parameter PC_SELECT_RESET = 2'd3 ;
 
 reg [NUM_STATE_BITS-1:0] current_state ;
 reg [NUM_STATE_BITS-1:0] next_state ;
+
+wire [WIDTH_OPCODE-1:0] opcode ;
+assign opcode = instruction[INSTRUCTION_WIDTH-1:OPCODE_LSB] ;
 
 always @ (posedge clk) begin
     if( reset )
