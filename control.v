@@ -129,7 +129,7 @@ always @(current_state or opcode or zero ) begin
         pc_write_enable <= TRUE;
         RegWrite <= FALSE;
 
-        IR_Write <= TRUE
+        IR_Write <= TRUE;
         alu_src_a <=  ALU_SRC_A_PC_ENABLE;
         alu_src_b <=  ALU_SRC_B_PLUS_1;
         Mem_Read_not_Write <= TRUE; // either or, since mem_select disabled
@@ -190,20 +190,13 @@ always @(current_state or opcode or zero ) begin
      STATE_R_EXE: begin
          ALUop <= ALU_OP_ADD;
          next_state <= STATE_ALU_WB ;
-         case(opcode)
-            INSTR_ADD: begin
-                alu_src_a <=  ALU_SRC_A_REG_SRC;
-                alu_src_b <=  ALU_SRC_B_REG_SRC;
-            end
-            INSTR_ADDI: begin
-                alu_src_a <= ALU_SRC_A_REG_SRC ;
-                alu_src_b <= ALU_SRC_B_IMM_BYTES ;
-            end
-            INSTR_LI: begin
-                alu_src_a <=  ALU_SRC_A_REG_SRC;
-                alu_src_b <=  ALU_SRC_B_IMM_BYTES;
-            end
-     end
+			alu_src_a <=  ALU_SRC_A_REG_SRC;
+         case(opcode) 
+            INSTR_ADD:  alu_src_b <=  ALU_SRC_B_REG_SRC;
+            INSTR_ADDI: alu_src_b <= ALU_SRC_B_IMM_BYTES ;
+            INSTR_LI:   alu_src_b <=  ALU_SRC_B_IMM_BYTES;
+			endcase
+	  end
      STATE_ALU_WB: begin
          next_state <= STATE_IF ;
          RegWrite <= TRUE; //write
@@ -215,7 +208,7 @@ always @(current_state or opcode or zero ) begin
         alu_src_a <= TRUE;
         alu_src_b <= ALU_SRC_B_REG_SRC;
         ALUop <= ALU_OP_SUB;
-        if(zero): // if they are equal aka zero, then dont branch
+        if(zero) // if they are equal aka zero, then dont branch
             pc_write_enable <= FALSE;
         else begin
             pc_write_enable <= TRUE;

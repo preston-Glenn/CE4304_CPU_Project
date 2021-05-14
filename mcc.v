@@ -66,7 +66,7 @@ module Multi_Cycle_Computer(
         .write_addr(reg_dest),
         .read_data1(reg_src_1_data),
         .read_data2(reg_src_2_data),
-        .read_data3(reg_dest_data).
+        .read_data3(reg_dest_data),
         .write_data(regfile_data),
         .write_enable(regfile_write_enable),
         .clk(clock)
@@ -150,7 +150,7 @@ module Multi_Cycle_Computer(
         .data0(reg_src_2),
         .data1(24'b1),
         .data2(immediate),
-        .data3(24'1023),//error
+        .data3(24'b1023), //error
         .select(alu_B_src),
         .data_output(alu_b_input)
     );
