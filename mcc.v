@@ -6,13 +6,15 @@
 module Multi_Cycle_Computer(
     clock,
 	reset,
-	program_out
+	program_out,
+	program_out2
   ) ;
     `include "params.v"
 
     input clock ;
     input reset ;
     output [DATA_BUS_WIDTH-1:0] program_out ;
+	 output [DATA_BUS_WIDTH-1:0] program_out2;
 
     supply1 VDD;
     
@@ -20,8 +22,8 @@ module Multi_Cycle_Computer(
     wire [REGFILE_ADDR_BITS-1:0] reg_src_1;
     wire [REGFILE_ADDR_BITS-1:0] reg_src_2;
     wire [REGFILE_ADDR_BITS-1:0] reg_dest;
-    wire [REGFILE_ADDR_BITS-1:0] reg_dest_data;
-
+	 
+    wire [WIDTH_REGISTER_FILE-1:0] reg_dest_data;
     wire [WIDTH_REGISTER_FILE-1:0] reg_src_1_data;
     wire [WIDTH_REGISTER_FILE-1:0] reg_src_2_data;
     
@@ -35,7 +37,7 @@ module Multi_Cycle_Computer(
 	 wire [DATA_BUS_WIDTH-1:0] alu_out;
 
     wire [INSTRUCTION_WIDTH-1:0] iram_out;
-    wire [DATA_BUS_WIDTH-1:0] dram_data;
+    wire [DATA_BUS_WIDTH-1:0] dram_data_out;
 
     wire [1:0] alu_B_src;
     wire [DATA_BUS_WIDTH-1:0] alu_a_input;
@@ -43,7 +45,7 @@ module Multi_Cycle_Computer(
     wire [DATA_BUS_WIDTH-1:0] alu_a_input_reg;
     wire [DATA_BUS_WIDTH-1:0] alu_b_input_reg;
     wire [DATA_BUS_WIDTH-1:0] dest_data_reg;
-	wire [DATA_BUS_WIDTH-1:0] sign_extended ;
+	 wire [DATA_BUS_WIDTH-1:0] sign_extended ;
     wire [DATA_BUS_WIDTH-1:0] loaded_memory;
 
       // data address wires
@@ -56,8 +58,11 @@ module Multi_Cycle_Computer(
     assign reset_address = 11'd1024 ;
     assign jump_address = 11'd1024 ;
 
-    assign program_out = dram_data ;
+ 
 
+    assign program_out = dram_data_out ;
+	 assign program_out2 = alu_reg_out;
+	
 // MEMORY FILES
 
     assign #30 clock_delayed = clock ;
@@ -93,7 +98,7 @@ module Multi_Cycle_Computer(
     dram data_ram (
         .address(alu_reg_out[ADDRESS_BUS_WIDTH-1:0]),
         .write_data(dest_data_reg), //store word
-        .read_data(alu_b_input_reg), 
+        .read_data(dram_data_out), 
         .read_not_write(mem_read),
         .clk(clock),
         .cs(mem_select)
@@ -119,7 +124,7 @@ module Multi_Cycle_Computer(
 
     data_register load_memory_register(
         .clk(clock_delayed), 
-        .in_data(dram_data), 
+        .in_data(dram_data_out), 
         .out_data(loaded_memory),
         .en(mem_select)
     );

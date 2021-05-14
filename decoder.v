@@ -55,11 +55,11 @@ module decode_instruction(
   // ASSEMBLY: li RDest, Immediate : li R1, 0x10     or load 0x10 into R1
   // opcode = INSTR_LR
   // opcode | reg_dest |  0x0  | unused | immediate   
-  //   5    |    4     |   4   |   4    |    16     // 33 - 9 - 16 = 8
+  //   5    |    4     |   4   |    4   |    16     // 33 - 9 - 16 = 8
            
            
   // Instruction 4: Save Register
-  // ASSEMBLY: sr RSrc[Immediate], RDest : sr R1[0x10], R2       or save R2 into ((R1)+0x10)   
+  // ASSEMBLY: sr RDest[Immediate], RSrc : sr R1[0x10], R2       or save R2 into ((R1)+0x10)   
   // opcode = INSTR_SR
   // opcode | reg_dest | reg_source_1 | unused | immediate   
   //   5    |    4     |    4         |    4   |     16     // 33 - 13 - 16 = 6
@@ -143,10 +143,10 @@ module decode_instruction(
   
   
   // Instruction 16: Branch Not Equal
-  // ASSEMBLY: bneq RDest, RSource, Immediate : bneq R2, R1, 0x10 
+  // ASSEMBLY: bneq RSource1, RSource2, Immediate : bneq R2, R1, 0x10 
   // opcode = INSTR_BNE
-  // opcode | reg_dest | reg_source_1 | unused | immediate   
-  //   5    |    4     |      4       |    4   |    16     // 33 - 13 - 16 = 4
+  // opcode | reg_dest | reg_source_1 | RSource2 | immediate   
+  //   5    |    0     |      4       |    4   |    16     // 33 - 13 - 16 = 4
 
   //**********************************************************************************************************************************************
   //**********************************************************************************************************************************************
@@ -192,13 +192,13 @@ module decode_instruction(
   // hex value:
   // 0x052210000
   //
-  // sr opcode = 3. sr Rd[immediate], Rsource       
-  // ASSEMBLY: sr RDest[Immediate], Rsource : sr R0[0x30], R2                
+  // sr opcode = 3. sr Rd[immediate], Rsource
+  // ASSEMBLY: sr RDest[Immediate], Rsource : sr R0[0x30], R2
   // opcode | reg_dest | reg_source | unused | immediate   
   //   5    |    4     |    4       |    4   |     16 
-  // 00011     0010        0000         0000      0000 0000 0011 0000
+  // 00011     0000        0010         0000      0000 0000 0011 0000
   // regroup bits:
-  // 0  0110 0010  0000 0000 0000 0000 0011 0000
+  // 0  0110 0000  0001 0000 0000 0000 0011 0000
   // hex value:
   // 0x030200030
   //
@@ -206,7 +206,7 @@ module decode_instruction(
   // 0x011000010
   // 0x012000020
   // 0x052210000
-  // 0x032000030
+  // 0x030200030
   //
   // Program 2:
   // int sum = 0 ;
@@ -274,10 +274,10 @@ module decode_instruction(
   
   // ASSEMBLY: bne R1, R3, -3 
   // opcode = 14
-  // opcode | reg_dest | reg_source | unused | immediate   
+  // opcode | unused | reg_source1 | reg_source2 | immediate   
   //   5    |    4     |    4       |    4   |    16 
   // 0 1110     0001       0011        0000     1111 1111 1111 1101 (2's complement of -3) 
-  // hex code: 0x0E130FFFD  
+  // hex code: 0x0E031FFFD  
   
   
   // Machine code sum progam here:  
@@ -285,8 +285,8 @@ module decode_instruction(
   // 0x022000000
   // 0x02300000A
   // 0x052210000
-  // 0x061000001
-  // 0x0E130FFFD
+  // 0x061100001
+  // 0x0E031FFFD
   //
     
 endmodule

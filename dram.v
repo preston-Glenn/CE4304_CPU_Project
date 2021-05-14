@@ -26,8 +26,8 @@ module dram(
 
   // Load values into memory here
   initial begin
-    data_memory[16] = 8'd10;
-    data_memory[32] = 8'd23;
+    data_memory[16] = 8'd20;
+    data_memory[32] = 8'd22;
   end
 
 

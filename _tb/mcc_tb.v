@@ -28,12 +28,14 @@ module mcc_tb;
 	reg clock;
 	reg reset;
    wire [15:0] program_out ;
+	wire [15:0] program_out2;
 	
 	// Instantiate the Unit Under Test (UUT)
 	Multi_Cycle_Computer uut (
 		.clock(clock), 
 		.reset(reset),
-		.program_out(program_out)
+		.program_out(program_out),
+		.program_out2(program_out2)
 	);
 
 
@@ -54,7 +56,7 @@ module mcc_tb;
 			#100 ;
 	   end
 		
-		for ( c = 0 ; c <= 40; c = c+1 ) begin
+		for ( c = 0 ; c <= 300; c = c+1 ) begin
 		   clock <= c ;
 			reset <= 0 ;
 			#100 ;
