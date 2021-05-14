@@ -9,6 +9,7 @@ module regfile(
     write_addr,
     read_data1,
     read_data2,
+    read_data3,
     write_data,
     write_enable,
     clk
@@ -18,6 +19,7 @@ module regfile(
 
   input [REGFILE_ADDR_BITS-1:0] read_addr1 ;
   input [REGFILE_ADDR_BITS-1:0] read_addr2 ;
+  input [REGFILE_ADDR_BITS-1:0] read_addr3 ;
   input [REGFILE_ADDR_BITS-1:0] write_addr ;
   output [DATA_BUS_WIDTH-1:0] read_data1 ;
   output [DATA_BUS_WIDTH-1:0] read_data2 ;
@@ -35,5 +37,6 @@ module regfile(
   // Asynchronous read with a (register 0) being 0
   assign read_data1 = (read_addr1 ? regfile[read_addr1] : 24'b0 ) ;
   assign read_data2 = (read_addr2 ? regfile[read_addr2] : 24'b0 ) ;
+  assign read_data3 = (write_addr ? regfile[write_addr] : 24'b0 ) ;
 
 endmodule

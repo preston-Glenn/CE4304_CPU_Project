@@ -5,8 +5,7 @@ module iram(
     address,
     data,
     read_not_write,
-    clk,
-    
+    clk   
 );
 `include "params.v"
 
@@ -36,8 +35,6 @@ memory[0] = 33'b1010;
   // 0x022000000
   // 0x02300000A
   // 0x052210000
-  // 0x061100001
-  // 0x0E130FFFD
 
 
 end

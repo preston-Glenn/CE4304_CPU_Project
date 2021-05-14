@@ -42,7 +42,7 @@ module addr_register(
 endmodule
 
 
-module inst_register( 
+module instruction_register( 
     clk, 
     in_data, 
     instruction,
