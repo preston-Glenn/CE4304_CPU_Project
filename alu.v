@@ -14,7 +14,7 @@ module alu(
 
   input [DATA_BUS_WIDTH-1:0] A ;
   input [DATA_BUS_WIDTH-1:0] B ;
-  input [ALU_OP_NUM_BITS-1:0] Alu_Op ;
+  input [2:0] Alu_Op ;
   output [DATA_BUS_WIDTH-1:0] result ;
   output Z ;
 

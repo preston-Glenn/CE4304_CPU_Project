@@ -24,20 +24,23 @@ RegWrite,
 
 
 );
+
+`include "params.v"
 input clk;
 input reset ;              
 input [WIDTH_OPCODE-1:0] opcode ; 
+input zero;
 
-output IR_Write ;     
-output MemToReg ;          
-output Mem_Read_not_Write ; 
-output alu_src_a ;           
-output [1:0] alu_src_b ;  
-output [1:0] PC_Source ;           
-output pc_write_enable ;    
-output ALUop;  
-output RegWrite;
-output Mem_Select;    
+output reg IR_Write ;     
+output reg MemToReg ;          
+output reg Mem_Read_not_Write ; 
+output reg alu_src_a ;           
+output reg [1:0] alu_src_b ;  
+output reg [1:0] PC_Source ;           
+output reg pc_write_enable ;    
+output reg ALUop;  
+output reg RegWrite;
+output reg Mem_Select;    
 
 
 parameter NUM_STATE_BITS = 4;
@@ -62,10 +65,6 @@ parameter STATE_ERROR = 13 ;
 
 
 
-
-parameter ALU_OP_ADD = 0 ;
-parameter ALU_OP_SUB = 1 ;
-
 parameter ALU_SRC_A_PC_ENABLE = 1'b0 ;
 parameter ALU_SRC_A_REG_SRC = 1'b1 ;
 
@@ -79,8 +78,8 @@ parameter DATA_SELECT_MEMORY = 1'b1 ;
 // PC select mux value
 parameter PC_SELECT_ALU = 2'b0 ;
 parameter PC_SELECT_ALU_BUF = 2'b1 ;
-parameter PC_SELECT_JUMP = 2'b2 ;
-parameter PC_SELECT_RESET = 2'b3 ;
+parameter PC_SELECT_JUMP = 2'd2 ;
+parameter PC_SELECT_RESET = 2'd3 ;
 
 
 reg [NUM_STATE_BITS-1:0] current_state ;
@@ -150,7 +149,7 @@ always @(current_state or opcode or zero ) begin
             INSTR_ADDI: next_state <= STATE_R_EXE ;            
             INSTR_LR:   next_state <= STATE_LR_ADDR ;//good
             INSTR_SR:   next_state <= STATE_SR_ADDR ;//good
-            INSTR_BNEQ: next_state <= STATE_BRANCH_NEQ ;
+            INSTR_BNE: next_state <= STATE_BRANCH_NEQ ;
             INSTR_LI:   next_state <= STATE_R_EXE ;             // treat as addi + $0; //addi functions as li in his example
             default:    next_state <= STATE_ERROR ;//good
         endcase

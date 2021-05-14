@@ -28,7 +28,7 @@ parameter INSTR_SHR  = 13 ;
 parameter INSTR_BNE = 14 ;
 parameter INSTR_BE = 15 ;
 
-
 parameter ALU_OP_ADD = 0 ;
 parameter ALU_OP_SUB = 1 ;
+
 

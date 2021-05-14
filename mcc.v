@@ -31,6 +31,7 @@ module Multi_Cycle_Computer(
     wire [INSTRUCTION_WIDTH-1:0] instruction;
     wire [WIDTH_OPCODE-1:0] opcode;
     wire [1:0] pc_source;
+	 wire [DATA_BUS_WIDTH-1:0] alu_reg_out;
 
     wire [INSTRUCTION_WIDTH-1:0] iram_out;
     wire [DATA_BUS_WIDTH-1:0] dram_data;
@@ -38,16 +39,17 @@ module Multi_Cycle_Computer(
     wire [1:0] alu_B_src;
     wire [DATA_BUS_WIDTH-1:0] alu_a_input;
     wire [DATA_BUS_WIDTH-1:0] alu_b_input;
+	 wire [DATA_BUS_WIDTH-1:0] sign_extended ;
 
       // data address wires
     wire [ADDRESS_BUS_WIDTH-1:0] reset_address ;
     wire [ADDRESS_BUS_WIDTH-1:0] jump_address ;
+	 
 
     wire clock_delayed;
 
-    assign reset_address = 11'd2048 ;
-    assign jump_address = 11'd2048 ;
-    assign program_out = mem_data ;
+    assign reset_address = 11'd1024 ;
+    assign jump_address = 11'd1024 ;
 
     assign program_out = dram_data ;
 
@@ -135,7 +137,7 @@ module Multi_Cycle_Computer(
     );
 
 
-
+	  sign_extender se ( .src(immediate), .out1(sign_extended) ) ;
 
 
     // MUX's for ALU INPUT
@@ -150,17 +152,31 @@ module Multi_Cycle_Computer(
     mux4  #(DATA_BUS_WIDTH) alu_B_mux(
         .data0(reg_src_2),
         .data1(24'b1),
-        .data2(immediate),
-        .data3(24'b1023), //error
+        .data2(sign_extended),
+        .data3(24'd1023), //error
         .select(alu_B_src),
         .data_output(alu_b_input)
     );
 
+	data_register regA( 
+    .clk(clock), 
+    .in_data(alu_a_input), 
+    .out_data(alu_a_input_reg),
+    .en(VDD)
+  ) ;
+  
+  data_register regB( 
+    .clk(clock), 
+    .in_data(alu_b_input), 
+    .out_data(alu_b_input_reg),
+    .en(VDD)
+  ) ;
+	
 
 
     alu ALU(
-        .A(alu_a_input),
-        .B(alu_b_input),
+        .A(alu_a_input_reg),
+        .B(alu_b_input_reg),
         .result(alu_out),
         .Alu_Op(alu_ctrl),
         .Z(zero)

@@ -19,10 +19,10 @@ module regfile(
 
   input [REGFILE_ADDR_BITS-1:0] read_addr1 ;
   input [REGFILE_ADDR_BITS-1:0] read_addr2 ;
-  input [REGFILE_ADDR_BITS-1:0] read_addr3 ;
   input [REGFILE_ADDR_BITS-1:0] write_addr ;
   output [DATA_BUS_WIDTH-1:0] read_data1 ;
   output [DATA_BUS_WIDTH-1:0] read_data2 ;
+  output [DATA_BUS_WIDTH-1:0] read_data3 ;
   input [DATA_BUS_WIDTH-1:0] write_data ;
   input write_enable ;
   input clk ;

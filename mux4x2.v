@@ -23,10 +23,10 @@ module mux4(
 reg [WIDTH-1:0] data_bus ;
   always @ (*) begin
     case (select)
-      0: data_bus <= data_0 ;
-      1: data_bus <= data_1 ;
-      2: data_bus <= data_2 ;
-      3: data_bus <= data_3 ;
+      0: data_bus <= data0 ;
+      1: data_bus <= data1 ;
+      2: data_bus <= data2 ;
+      3: data_bus <= data3 ;
     endcase
   end
   assign data_out = data_bus ;
