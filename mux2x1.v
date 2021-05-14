@@ -1,4 +1,4 @@
-
+`timescale 1ns / 1ps
 // address_mux2  mux2(xxx)
 // data_mux2 #(DATA_BUS_WIDTH) mux2(xxx)
 

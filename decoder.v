@@ -54,8 +54,8 @@ module decode_instruction(
   // Instruction 3: Load Immeadiate
   // ASSEMBLY: li RDest, Immediate : li R1, 0x10     or load 0x10 into R1
   // opcode = INSTR_LR
-  // opcode | reg_dest |  unused | immediate   
-  //   5    |    4     |    8    |    16     // 33 - 9 - 16 = 8
+  // opcode | reg_dest |  0x0  | unused | immediate   
+  //   5    |    4     |   4   |    4   |    16     // 33 - 9 - 16 = 8
            
            
   // Instruction 4: Save Register
@@ -80,11 +80,11 @@ module decode_instruction(
         
         
   // Instruction 7: Add Immeadiate
-  // ASSEMBLY: addi RDest, immeadiate  ; addi R1, 0x02 ;   or R1 = R1 + 0x02
+  // ASSEMBLY: addi RDest, immeadiate  ; addi R1, R1, 0x02 ;   or R1 = R1 + 0x02
   // opcode = INSTR_ADD
-  // opcode | reg_dest |  unused  | immeadiate
-  //   5    |    4     |    8     |    16      // 33 - 25  = 8  
-      
+  // opcode | reg_dest | reg_source_1 | unused  | immeadiate
+  //   5    |    4     |    4         |    4    |    16      // 33 - 29  = 4  
+  //--**-- I just need a control to switch between reg_source_2 and immeadiate    
       
   // Instruction 8: Subtract
   // ASSEMBLY: sub RDest, RSrc_1, RSrc_2  ; sub R3, R1, R2      or R3 <= R1 - R2 ;
@@ -267,10 +267,10 @@ module decode_instruction(
         
   // ASSEMBLY: addi R1, 0x01
   // opcode = 6
-  // opcode | reg_dest |  unused  | immeadiate
-  //   5    |    4     |    8     |    16
-  // 0 0110     0001    0000 0000    0000 0000 0000 0001
-  // hex code: 0x061000001
+  // opcode | reg_dest | reg_source_1 | unused  | immeadiate
+  //   5    |    4     |    4         |    4    |    16      
+  // 0 0110     0001    0001 0000    0000 0000 0000 0001
+  // hex code: 0x061100001
   
   // ASSEMBLY: bne R1, R3, -3 
   // opcode = 14
