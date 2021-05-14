@@ -24,27 +24,17 @@ reg [INSTRUCTION_WIDTH-1:0] current_value;
 initial begin
 
 
-  // Program 1:
-  // 0x011000010
-  // 0x012000020
-  // 0x052210000
-  // 0x032000030
+    // Program 1:
   
-   // memory[1024] = 33'h011000010;
+    // memory[1024] = 33'h011000010;
 	// memory[1025] = 33'h012000020;
 	// memory[1026] = 33'h052210000;
 	// memory[1027] = 33'h032000030;
 
+    // End of Program 1
 
-  // PROGRAM 2
 
-  // 0x021000000
-  // 0x022000000
-  // 0x02300000A
-  // 0x052210000
-  // 0x061000001
-  // 0x0E130FFFD
-  
+    // PROGRAM 2
 	memory[1024] = 33'h021000000;
 	memory[1025] = 33'h022000000;
 	memory[1026] = 33'h02300000B; // we use 11 here to represent <= 10
@@ -53,7 +43,7 @@ initial begin
 	memory[1029] = 33'h0E031FFFD;
 	memory[1030] = 33'h032000030;
 	
-	// NOPS
+	    // NOPS
 	memory[1031] = 33'h002000030;
 	memory[1032] = 33'h002000030;
 	memory[1033] = 33'h002000030;
@@ -63,6 +53,7 @@ initial begin
 	memory[1037] = 33'h002000030;
 	memory[1038] = 33'h002000030;
 	
+    // End of Prgram 2
 
 
 
