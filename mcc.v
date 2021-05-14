@@ -49,6 +49,7 @@ module Multi_Cycle_Computer(
     assign jump_address = 11'd2048 ;
     assign program_out = mem_data ;
 
+    assign program_out = dram_data ;
 
 // MEMORY FILES
 
