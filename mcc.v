@@ -40,7 +40,10 @@ module Multi_Cycle_Computer(
     wire [1:0] alu_B_src;
     wire [DATA_BUS_WIDTH-1:0] alu_a_input;
     wire [DATA_BUS_WIDTH-1:0] alu_b_input;
-	 wire [DATA_BUS_WIDTH-1:0] sign_extended ;
+    wire [DATA_BUS_WIDTH-1:0] alu_a_input_reg;
+    wire [DATA_BUS_WIDTH-1:0] alu_b_input_reg;
+    wire [DATA_BUS_WIDTH-1:0] dest_data_reg;
+	wire [DATA_BUS_WIDTH-1:0] sign_extended ;
     wire [DATA_BUS_WIDTH-1:0] loaded_memory;
 
       // data address wires
@@ -89,8 +92,8 @@ module Multi_Cycle_Computer(
 
     dram data_ram (
         .address(alu_reg_out[ADDRESS_BUS_WIDTH-1:0]),
-        .write_data(reg_dest_data), //store word
-        .read_data(dram_data),
+        .write_data(dest_data_reg), //store word
+        .read_data(alu_b_input_reg), 
         .read_not_write(mem_read),
         .clk(clock),
         .cs(mem_select)
@@ -155,7 +158,7 @@ module Multi_Cycle_Computer(
 
     //WORK
     mux4  #(DATA_BUS_WIDTH) alu_B_mux(
-        .data0(reg_src_2_data),
+        .data0(alu_b_input_reg),
         .data1(24'b1),
         .data2(sign_extended),
         .data3(24'd1023), //error
@@ -177,8 +180,14 @@ module Multi_Cycle_Computer(
     .out_data(alu_b_input_reg),
     .en(VDD)
   ) ;
-	
 
+    data_register regDest( 
+    .clk(clock), 
+    .in_data(reg_dest_data), 
+    .out_data(dest_data_reg),
+    .en(VDD)
+  ) ;
+	
 
     alu ALU(
         .A(alu_a_input),
@@ -196,12 +205,6 @@ module Multi_Cycle_Computer(
         .immediate(immediate),
         .opcode(opcode)
     );
-
-
-
-
-
-
 
 
     control controller(
