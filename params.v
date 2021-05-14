@@ -27,17 +27,8 @@ parameter INSTR_SHL  = 12 ;
 parameter INSTR_SHR  = 13 ;
 parameter INSTR_BNE = 14 ;
 parameter INSTR_BE = 15 ;
-//    register file index 4 it takes 3 bits to encode r0...r7
-///   addr  --------------------
-//          | 63            10 |
-//       r0 |  .............   |      Address has nothing to do with the size of data!
-//       r1 |  width of data   |      Address | Data tupple (A,D)
-//          |                  |
-//       .  |                  |
-//       .  |                  |
-//       .  |                  |
-//          |                  |
-//       r7 |                  |
-//          |                  |
-///         --------------------
-//
+
+parameter ALU_OP_ADD = 0 ;
+parameter ALU_OP_SUB = 1 ;
+
+

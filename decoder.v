@@ -7,8 +7,8 @@ module decode_instruction(
   reg_source_1,  
   reg_source_2,  
   immediate,
-  opcode,
-  decoded) ;
+  opcode
+  ) ;
   `include "params.v"
 
   input [INSTRUCTION_WIDTH-1:0] instruction ;
@@ -17,7 +17,6 @@ module decode_instruction(
   output [REGFILE_ADDR_BITS-1:0] reg_dest ;
   output [IMMEDIATE_WIDTH-1:0] immediate ;
   output [WIDTH_OPCODE-1:0] opcode ;
-  output [NUM_INSTRUCTIONS-1:0] decoded ;
 
   parameter OPCODE_LSB = INSTRUCTION_WIDTH - WIDTH_OPCODE ;
   assign opcode = instruction[INSTRUCTION_WIDTH-1:OPCODE_LSB];
@@ -55,8 +54,8 @@ module decode_instruction(
   // Instruction 3: Load Immeadiate
   // ASSEMBLY: li RDest, Immediate : li R1, 0x10     or load 0x10 into R1
   // opcode = INSTR_LR
-  // opcode | reg_dest |  unused | immediate   
-  //   5    |    4     |    8    |    16     // 33 - 9 - 16 = 8
+  // opcode | reg_dest |  0x0  | unused | immediate   
+  //   5    |    4     |   4   |    4   |    16     // 33 - 9 - 16 = 8
            
            
   // Instruction 4: Save Register
@@ -81,11 +80,11 @@ module decode_instruction(
         
         
   // Instruction 7: Add Immeadiate
-  // ASSEMBLY: addi RDest, immeadiate  ; addi R1, 0x02 ;   or R1 = R1 + 0x02
+  // ASSEMBLY: addi RDest, immeadiate  ; addi R1, R1, 0x02 ;   or R1 = R1 + 0x02
   // opcode = INSTR_ADD
-  // opcode | reg_dest |  unused  | immeadiate
-  //   5    |    4     |    8     |    16      // 33 - 25  = 8  
-      
+  // opcode | reg_dest | reg_source_1 | unused  | immeadiate
+  //   5    |    4     |    4         |    4    |    16      // 33 - 29  = 4  
+  //--**-- I just need a control to switch between reg_source_2 and immeadiate    
       
   // Instruction 8: Subtract
   // ASSEMBLY: sub RDest, RSrc_1, RSrc_2  ; sub R3, R1, R2      or R3 <= R1 - R2 ;
@@ -144,10 +143,10 @@ module decode_instruction(
   
   
   // Instruction 16: Branch Not Equal
-  // ASSEMBLY: bneq RDest, RSource, Immediate : bneq R2, R1, 0x10 
+  // ASSEMBLY: bneq RSource1, RSource2, Immediate : bneq R2, R1, 0x10 
   // opcode = INSTR_BNE
-  // opcode | reg_dest | reg_source_1 | unused | immediate   
-  //   5    |    4     |      4       |    4   |    16     // 33 - 13 - 16 = 4
+  // opcode | reg_dest | reg_source_1 | RSource2 | immediate   
+  //   5    |    0     |      4       |    4   |    16     // 33 - 13 - 16 = 4
 
   //**********************************************************************************************************************************************
   //**********************************************************************************************************************************************
@@ -201,13 +200,13 @@ module decode_instruction(
   // regroup bits:
   // 0  0110 0000  0001 0000 0000 0000 0011 0000
   // hex value:
-  // 0x030100030
+  // 0x030200030
   //
   // Program 1:
   // 0x011000010
   // 0x012000020
   // 0x052210000
-  // 0x030100030
+  // 0x030200030
   //
   // Program 2:
   // int sum = 0 ;
@@ -268,17 +267,17 @@ module decode_instruction(
         
   // ASSEMBLY: addi R1, 0x01
   // opcode = 6
-  // opcode | reg_dest |  unused  | immeadiate
-  //   5    |    4     |    8     |    16
-  // 0 0110     0001    0000 0000    0000 0000 0000 0001
-  // hex code: 0x061000001
+  // opcode | reg_dest | reg_source_1 | unused  | immeadiate
+  //   5    |    4     |    4         |    4    |    16      
+  // 0 0110     0001    0001 0000    0000 0000 0000 0001
+  // hex code: 0x061100001
   
   // ASSEMBLY: bne R1, R3, -3 
   // opcode = 14
-  // opcode | reg_dest | reg_source | unused | immediate   
+  // opcode | unused | reg_source1 | reg_source2 | immediate   
   //   5    |    4     |    4       |    4   |    16 
   // 0 1110     0001       0011        0000     1111 1111 1111 1101 (2's complement of -3) 
-  // hex code: 0x0E130FFFD  
+  // hex code: 0x0E031FFFD  
   
   
   // Machine code sum progam here:  
@@ -286,8 +285,8 @@ module decode_instruction(
   // 0x022000000
   // 0x02300000A
   // 0x052210000
-  // 0x061000001
-  // 0x0E130FFFD
+  // 0x061100001
+  // 0x0E031FFFD
   //
     
 endmodule
